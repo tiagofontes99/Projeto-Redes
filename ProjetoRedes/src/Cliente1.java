@@ -73,15 +73,11 @@ public class Cliente1 {
                 e.printStackTrace();
             }//inicialização de output para servidor
 
-
-            /*
-
-             * */
             System.out.println("socket=" + socketTCP);
 
         } catch (ConnectException e) {
             long timer = System.currentTimeMillis();
-            while (System.currentTimeMillis() < timer + 15000) {
+            while (System.currentTimeMillis() < timer + 15000) {//timer caso falhe ligação
 
             }
             System.out.println("Server Down try again later\nConection shutting down");

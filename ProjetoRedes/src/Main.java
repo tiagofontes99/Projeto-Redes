@@ -11,6 +11,7 @@ public class Main extends Thread{
     static byte[] buf = new byte[1024];
     static InetAddress address;
     static DatagramSocket socketUDP;
+    static ListDealer dealer=new ListDealer();
 
     static {
         try {
@@ -20,7 +21,7 @@ public class Main extends Thread{
         }
     }
 
-    static String sendEcho(String msg,Socket socketTCP) throws IOException {
+    public String sendEcho(String msg,Socket socketTCP) throws IOException {
         socketTCP.getRemoteSocketAddress();
         buf = msg.getBytes();
         DatagramPacket packet
@@ -34,20 +35,38 @@ public class Main extends Thread{
         return received;
     }
 
-    public class HelloRunnable implements Runnable {
 
-        public void run() {
-            System.out.println("Hello from a thread!");
+
+    public void run(Socket socketTCP) throws IOException {
+        InetAddress ip=null;
+        System.out.println("cliente acepted");
+        InetSocketAddress a = (InetSocketAddress) socketTCP.getRemoteSocketAddress();
+        ip = a.getAddress();
+
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(socketTCP.getInputStream()));
+
+
+
+        dealer.trataIPs(ip.toString());
+        if (dealer.verify(ip.toString())){
+            sendEcho("YOU ARE IN THE BLACK LIST",socketTCP);
+            socketTCP.close();
+        }else{
+            //ps.println("Welcome");
+            dealer.addOnlineUser(ip.toString());
         }
-
 
     }
 
 
+
+
+
     public static void main(String args[]) throws IOException{
-        InetAddress ip=null;
+
         ServerSocket serverTCP = new ServerSocket(6500);
-        ListDealer dealer=new ListDealer();
+
 
 
 
@@ -56,25 +75,10 @@ public class Main extends Thread{
             System.out.println("Waiting client");
             socketTCP = serverTCP.accept();
 
+            if (socketTCP!=null){
 
-
-            System.out.println("cliente acepted");
-            InetSocketAddress a = (InetSocketAddress) socketTCP.getRemoteSocketAddress();
-            ip = a.getAddress();
-
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(socketTCP.getInputStream()));
-
-
-
-            dealer.trataIPs(ip.toString());
-            if (dealer.verify(ip.toString())){
-                sendEcho("YOU ARE IN THE BLACK LIST",socketTCP);
-                socketTCP.close();
-            }else{
-                //ps.println("Welcome");
-                dealer.addOnlineUser(ip.toString());
             }
+
 
         }
     }
