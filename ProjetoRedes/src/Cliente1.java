@@ -55,7 +55,8 @@ public class Cliente1 {
 
             System.out.println("socket=" + socketTCP);
             System.out.println(getMenu());//
-            System.out.println("trying to recive msg");
+            System.out.println("trying to send");
+            ps.println(getInput());
             String received
                     = new String(packet.getData(), 0, packet.getLength());
             received=received.trim();

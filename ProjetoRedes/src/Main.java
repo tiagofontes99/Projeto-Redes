@@ -21,7 +21,7 @@ public class Main extends Thread{
         }
     }
 
-    public String sendEcho(String msg,Socket socketTCP) throws IOException {
+    public static String sendEcho(String msg, Socket socketTCP) throws IOException {
         socketTCP.getRemoteSocketAddress();
         buf = msg.getBytes();
         DatagramPacket packet
@@ -35,16 +35,25 @@ public class Main extends Thread{
         return received;
     }
 
-//
 
-    public void run(Socket socketTCP) throws IOException {
-        InetAddress ip=null;
-        System.out.println("cliente acepted");
-        InetSocketAddress a = (InetSocketAddress) socketTCP.getRemoteSocketAddress();
-        ip = a.getAddress();
 
+    public static void run(Socket socketTCP) throws IOException {
         BufferedReader br = new BufferedReader(
                 new InputStreamReader(socketTCP.getInputStream()));
+        System.out.println("current threas ==="+currentThread());
+        InetAddress ip=null;
+        System.out.println("cliente acepted");
+        System.out.println("waiting mesage from cliente");
+        InetSocketAddress a = (InetSocketAddress) socketTCP.getRemoteSocketAddress();
+        ip = a.getAddress();
+        String inputFromUser=br.readLine();
+        System.out.println("Message from user="+inputFromUser);
+        switch (inputFromUser){
+            case "0":
+
+        }
+
+
 
 
 
@@ -76,7 +85,7 @@ public class Main extends Thread{
             socketTCP = serverTCP.accept();
 
             if (socketTCP!=null){
-
+                run(socketTCP);
             }
 
 

@@ -13,6 +13,7 @@ public class ListDealer extends Main{
     }
     public void closeLists() throws IOException {
         writeTo("listaBranca");
+        writeTo("listaNegra");
     }
 
     public void addOnlineUser(String ip){
