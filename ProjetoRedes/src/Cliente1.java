@@ -40,7 +40,7 @@ public class Cliente1 {
                 "5-lista negra de utilizadores\n" +
                 "99-Sair";
     }
-
+//
 
     // usage: java EchoClient <servidor> <mensagem>
     public static void main(String args[]) throws Exception {
