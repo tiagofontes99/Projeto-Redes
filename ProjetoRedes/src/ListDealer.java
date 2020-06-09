@@ -56,7 +56,7 @@ public class ListDealer extends Main{
 
     public void readFrom(String list)  {
         try {
-            File myObj = new File("/home/tiago/IdeaProjects/ProjetoRedes/src/"+list+".txt");
+            File myObj = new File("ProjetoRedes/src/"+list+".txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();

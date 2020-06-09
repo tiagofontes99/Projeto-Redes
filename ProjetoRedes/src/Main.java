@@ -21,11 +21,11 @@ public class Main extends Thread{
         }
     }
 
-    public static String sendEcho(String msg, Socket socketTCP) throws IOException {
-        socketTCP.getRemoteSocketAddress();
+    public static String sendEcho(String msg, DatagramSocket socketUDP,Socket socketTCP) throws IOException {
+        socketUDP.getRemoteSocketAddress();
         buf = msg.getBytes();
         DatagramPacket packet
-                = new DatagramPacket(buf, buf.length, address, 4445);
+                = new DatagramPacket(buf, buf.length,socketTCP.getInetAddress(),9031);
         socketUDP.send(packet);
         byte[] buf2=new byte[1024];
         packet = new DatagramPacket(buf2, buf2.length);
@@ -38,6 +38,7 @@ public class Main extends Thread{
 
 
     public static void run(Socket socketTCP) throws IOException {
+
         BufferedReader br = new BufferedReader(
                 new InputStreamReader(socketTCP.getInputStream()));
         System.out.println("current threas ==="+currentThread());
@@ -49,8 +50,32 @@ public class Main extends Thread{
         String inputFromUser=br.readLine();
         System.out.println("Message from user="+inputFromUser);
         switch (inputFromUser){
-            case "0":
+            case "0": {
 
+                break;
+            }
+            case "1": {
+                System.out.println("entrou no 1");
+                sendEcho(dealer.listaBrancaToString(),socketUDP,socketTCP);
+                break;
+            }
+            case "2": {
+                sendEcho(dealer.listaNegraToString(),socketUDP,socketTCP);
+                break;
+            }
+            case "3": {
+                break;
+            }
+            case "4": {
+                break;
+            }
+            case "5": {
+
+                break;
+            }
+            case "99": {
+                break;
+            }
         }
 
 
@@ -59,7 +84,7 @@ public class Main extends Thread{
 
         dealer.trataIPs(ip.toString());
         if (dealer.verify(ip.toString())){
-            sendEcho("YOU ARE IN THE BLACK LIST",socketTCP);
+            sendEcho("YOU ARE IN THE BLACK LIST",socketUDP,socketTCP);
             socketTCP.close();
         }else{
             //ps.println("Welcome");
