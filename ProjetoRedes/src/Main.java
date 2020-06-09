@@ -35,7 +35,7 @@ public class Main extends Thread{
         return received;
     }
 
-
+//
 
     public void run(Socket socketTCP) throws IOException {
         InetAddress ip=null;
