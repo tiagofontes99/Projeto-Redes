@@ -7,6 +7,11 @@ import java.util.*;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
+/*
+COMUNICAÇÕES DE CLIENTE PARA SERVIDOR É TCP
+MENSSAGENS PARA OUTROS CLIENTES É EM UDP
+ */
+
 public class Main extends Thread{
     static byte[] buf = new byte[1024];
     static InetAddress address;
@@ -15,7 +20,7 @@ public class Main extends Thread{
 
     static {
         try {
-            socketUDP = new DatagramSocket();
+            socketUDP = new DatagramSocket(9031);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -41,12 +46,19 @@ public class Main extends Thread{
 
         BufferedReader br = new BufferedReader(
                 new InputStreamReader(socketTCP.getInputStream()));
+        PrintStream ps = new PrintStream(socketTCP.getOutputStream());
         System.out.println("current threas ==="+currentThread());
         InetAddress ip=null;
         System.out.println("cliente acepted");
         System.out.println("waiting mesage from cliente");
-        InetSocketAddress a = (InetSocketAddress) socketTCP.getRemoteSocketAddress();
-        ip = a.getAddress();
+
+        //InetSocketAddress a = (InetSocketAddress) socketTCP.getRemoteSocketAddress();
+        //recive udp  packet
+        //DatagramPacket packet=new DatagramPacket(buf,buf.length);
+        //socketUDP.receive(packet);
+        //****************
+
+        //ip = a.getAddress();
         String inputFromUser=br.readLine();
         System.out.println("Message from user="+inputFromUser);
         switch (inputFromUser){
@@ -55,9 +67,22 @@ public class Main extends Thread{
                 break;
             }
             case "1": {
+                ps.println(dealer.listaBrancaToString());
+                /*
                 System.out.println("entrou no 1");
-                sendEcho(dealer.listaBrancaToString(),socketUDP,socketTCP);
+
+                InetAddress address = packet.getAddress();
+                int destinyPort = packet.getPort();
+
+                buf = dealer.listaBrancaToString().getBytes();
+                address=socketUDP.getInetAddress();
+                packet = new DatagramPacket(buf, buf.length, address, destinyPort);
+                socketUDP.send(packet);
+                ///sendEcho(dealer.listaBrancaToString(),socketUDP,socketTCP);
+                */
+
                 break;
+
             }
             case "2": {
                 sendEcho(dealer.listaNegraToString(),socketUDP,socketTCP);

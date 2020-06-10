@@ -49,30 +49,72 @@ public class Cliente1 {
 
         try {
             Socket socketTCP = new Socket("localhost", 6500);//Porto TCP
-            PrintStream ps = new PrintStream(socketTCP.getOutputStream());
+            PrintStream ps = new PrintStream(socketTCP.getOutputStream());//iniciar comunicaçoes tcp
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(socketTCP.getInputStream()));//iniciar recebimento de comunicaçoes tcp
 
             address= socketTCP.getLocalAddress();
 
             System.out.println("socket=" + socketTCP);
             System.out.println(getMenu());//
             System.out.println("trying to send");
-            ps.println(getInput());
-            String received
-                    = new String(packet.getData(), 0, packet.getLength());
-            received=received.trim();
+            switch (getInput()){
+                case "0": {
+                    ps.println("0");
+                    System.out.println(br.readLine());
+                    break;
+                }
+                case "1": {
+                    ps.println("1");
+                    System.out.println(br.readLine());
+                    break;
+                }
+                case "2": {
+                    ps.println("2");
+                    break;
+                }
+                case "3": {
+                    ps.println("3");
+                    break;
+                }
+                case "4": {
+                    ps.println("4");
+                    break;
+                }
+                case "5": {
+                    ps.println("5");
+                    break;
+                }
+                case "99": {
+                    ps.println("99");
+                    break;
+                }
+            }
+            //
+            String received;
+            InetAddress address = packet.getAddress();
+            //int port = packet.getPort();
+            //packet=new DatagramPacket(buf ,buf.length,address,9031);
+            /*
+            System.out.println("trying to recive");
+            do {
+                received
+                        = new String(packet.getData(), 0, packet.getLength());
+                received=received.trim();
+            }while (received.isEmpty());
+
             System.out.println("recebido="+received);
             System.out.println("socket=" + socketTCP);
             System.out.println("server message=" + received);
+
+             */
+            /*
             if ("YOU ARE IN THE BLACK LIST".equals(received)) {
                 socketTCP.close();
             }
-            try {
-                System.out.println("trying to send message");
-                Cliente1 client = new Cliente1("localhost");
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }//inicialização de output para servidor
+             */
+
 
             System.out.println("socket=" + socketTCP);
 
