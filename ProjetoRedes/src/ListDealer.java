@@ -1,22 +1,24 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
-public class ListDealer extends Main{
-    private static HashSet<String> listaBranca=new HashSet<>();
-    private static HashSet<String> listaNegra=new HashSet<>();
-    private static HashSet<String> onlineUsers=new HashSet<>();
+public class ListDealer extends Main {
+    private static HashSet<String> listaBranca = new HashSet<>();
+    private static HashSet<String> listaNegra = new HashSet<>();
+    private static HashSet<String> onlineUsers = new HashSet<>();
 
     public ListDealer() {
         readFrom("listaBranca");
         readFrom("listaNegra");
     }
+
     public void closeLists() throws IOException {
         writeTo("listaBranca");
         writeTo("listaNegra");
     }
 
-    public void addOnlineUser(String ip){
+    public void addOnlineUser(String ip) {
         onlineUsers.add(ip);
     }
 
@@ -28,41 +30,63 @@ public class ListDealer extends Main{
         return listaNegra;
     }
 
-    public String listaNegraToString(){
-        return listaNegra.toString();
+    public ArrayList<String> getListaNegraToString() {
+        ArrayList<String> retorno = new ArrayList<>();
+        int i = 0;
+        for (String user : listaNegra) {
+            retorno.add(i + " - " + user);
+            i++;
+        }
+        return retorno;
     }
 
-    public String listaBrancaToString(){
-        return listaBranca.toString();
+    public ArrayList<String> getListaBrancaToString() {
+        ArrayList<String> retorno = new ArrayList<>();
+        int i = 0;
+        for (String user : listaBranca) {
+            retorno.add(i + " - " + user);
+            i++;
+        }
+        return retorno;
+    }
+
+    public ArrayList<String> printListaOnlineUsers() {
+        ArrayList<String> retorno = new ArrayList<>();
+        int i = 0;
+        for (String user : onlineUsers) {
+            retorno.add(i + " - " + user);
+            i++;
+        }
+        return retorno;
     }
 
     public HashSet<String> getOnlineUsers() {
         return onlineUsers;
     }
 
-    public boolean verify(String ip){
+    public boolean verify(String ip) {
         return listaNegra.contains(ip);
     }
 
-    public void trataIPs(String ip){
-        if (!listaBranca.contains(ip)&&!listaNegra.contains(ip)){
+    public void trataIPs(String ip) {
+        if (!listaBranca.contains(ip) && !listaNegra.contains(ip)) {
             listaBranca.add(ip);
-        }else if (listaBranca.contains(ip)&&listaNegra.contains(ip)){
+        } else if (listaBranca.contains(ip) && listaNegra.contains(ip)) {
             listaBranca.remove(ip);
         }
-        System.out.println("white list"+listaBranca.toString());
-        System.out.println("black list"+listaNegra.toString());
+        System.out.println("white list" + listaBranca.toString());
+        System.out.println("black list" + listaNegra.toString());
     }
 
-    public void readFrom(String list)  {
+    public void readFrom(String list) {
         try {
-            File myObj = new File("ProjetoRedes/src/"+list+".txt");
+            File myObj = new File("ProjetoRedes/src/" + list + ".txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
-                if ("listaBranca".equals(list)){
+                if ("listaBranca".equals(list)) {
                     listaBranca.add(data);
-                }else {
+                } else {
                     listaNegra.add(data);
                 }
                 System.out.println(data);
@@ -74,20 +98,20 @@ public class ListDealer extends Main{
         }
     }
 
-    public  void writeTo(String list) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("/home/tiago/IdeaProjects/ProjetoRedes/src/"+list+".txt"));
+    public void writeTo(String list) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("/home/tiago/IdeaProjects/ProjetoRedes/src/" + list + ".txt"));
         if ("listaBranca".equals(list)) {
             listaBranca
-                    .forEach(y-> {
+                    .forEach(y -> {
                         try {
                             writer.write(y);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     });
-        }else{
+        } else {
             listaNegra
-                    .forEach(y-> {
+                    .forEach(y -> {
                         try {
                             writer.write(y);
                         } catch (IOException e) {

@@ -11,10 +11,6 @@ import java.io.IOException;
 
 public class Cliente2 {
 
-    static InetAddress address;
-    static byte[] buf = new byte[1024];
-    private DatagramSocket socketUDP;
-
 
     public static String getInput() {
         Scanner in = new Scanner(System.in);
@@ -22,11 +18,10 @@ public class Cliente2 {
     }
 
 
-
     public Cliente2(String address) throws SocketException, UnknownHostException {
-
+/*
         this.address = InetAddress.getByName(address);
-        socketUDP = new DatagramSocket(9031,this.address);
+         socketUDP = new DatagramSocket(9031,this.address);*/
     }
 
     public static String getMenu() {
@@ -38,41 +33,59 @@ public class Cliente2 {
                 "3-Enviar mensagem a todos os utilizadores\n" +
                 "4-lista branca de utilizadores\n" +
                 "5-lista negra de utilizadores\n" +
-                "99-Sair";
+                "99-Sair\n\n" +
+                "Opção? ";
     }
-//
 
-    // usage: java EchoClient <servidor> <mensagem>
     public static void main(String args[]) throws Exception {
-
-        DatagramPacket packet = new DatagramPacket(buf, buf.length);//recebe menssagens UDP
 
         try {
             Socket socketTCP = new Socket("localhost", 6500);//Porto TCP
-            PrintStream ps = new PrintStream(socketTCP.getOutputStream());
+            PrintStream senderTCP = new PrintStream(socketTCP.getOutputStream());//iniciar comunicaçoes tcp
+            BufferedReader reciverTCP = new BufferedReader(new InputStreamReader(socketTCP.getInputStream()));//iniciar recebimento de comunicaçoes tcp
 
-            address= socketTCP.getLocalAddress();
 
-            System.out.println("socket=" + socketTCP);
             System.out.println(getMenu());//
-            System.out.println("trying to send");
-            ps.println(getInput());
-            String received
-                    = new String(packet.getData(), 0, packet.getLength());
-            received=received.trim();
-            System.out.println("recebido="+received);
-            System.out.println("socket=" + socketTCP);
-            System.out.println("server message=" + received);
-            if ("YOU ARE IN THE BLACK LIST".equals(received)) {
-                socketTCP.close();
-            }
-            try {
-                System.out.println("trying to send message");
-                Cliente1 client = new Cliente1("localhost");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }//inicialização de output para servidor
+            String input;
+            do {
+                input = getInput();
+                switch (input) {
+                    case "0": {
+                        System.out.println(getMenu());
+                        break;
+                    }
+                    case "1": {
+                        senderTCP.println("1");
+                        System.out.println(reciverTCP.readLine());
+                        break;
+                    }
+                    case "2": {
+                        senderTCP.println("2");
+                        break;
+                    }
+                    case "3": {
+                        senderTCP.println("3");
+                        break;
+                    }
+                    case "4": {
+                        senderTCP.println("4");
+                        System.out.println(reciverTCP.readLine());
+                        break;
+                    }
+                    case "5": {
+                        senderTCP.println("5");
+                        System.out.println(reciverTCP.readLine());
+                        break;
+                    }
+                    case "99": {
+                        senderTCP.println("99");
+                        System.out.println(reciverTCP.readLine());
+                        socketTCP.close();
+                        break;
+                    }
+                }
+                System.out.println("Opção? ");
+            } while (!"99".equals(input));
 
             System.out.println("socket=" + socketTCP);
 
