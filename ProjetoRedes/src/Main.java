@@ -12,7 +12,7 @@ public class Main extends Thread {
     static InetAddress address;
     static DatagramSocket socketUDP;
     static ListDealer dealer = new ListDealer();
-    static  ServerSocket serverTCP;
+    static ServerSocket serverTCP;
 
     static {
         try {
@@ -142,12 +142,11 @@ public class Main extends Thread {
                                 case "99": {
                                     senderTCP.println("A Sair, Cliente Desconectando...");
                                     socketTCP.close();
-                                    socketUDP.close();
                                     return;
                                 }
                             }
                         }
-                    }catch (NullPointerException e) {
+                    } catch (NullPointerException e) {
                         System.out.println("Cliente Desconectou\nA fechar conexão");
                         return;
                     }
