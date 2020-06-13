@@ -50,7 +50,7 @@ public class ListDealer extends Main {
         return retorno;
     }
 
-    public ArrayList<String> printListaOnlineUsers() {
+    public ArrayList<String> getListaOnlineUsers() {
         ArrayList<String> retorno = new ArrayList<>();
         int i = 0;
         for (String user : onlineUsers) {
