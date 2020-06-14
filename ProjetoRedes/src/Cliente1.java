@@ -14,7 +14,7 @@ public class Cliente1 {
     static String input1;
     static String input2;
     static String input3;
-
+    static String input;
     static Socket socketTCP;//Porto TCP
 
     static PrintStream senderTCP;//iniciar comunicaçoes tcp
@@ -141,8 +141,11 @@ public class Cliente1 {
 
 
             System.out.print(getMenu());//
-            String input;
+
             do {
+                input1 = "";
+                input2 = "";
+                input3 = "";
                 System.out.println("Opção? ");
                 input = getInput();
                 switch (input) {
@@ -151,28 +154,28 @@ public class Cliente1 {
                         break;
                     }
                     case "1": {
-                        input1="1";
+                        input1 = "1";
                         senderTCP.println("1");
                         System.out.println(reciverTCP.readLine());
                         break;
                     }
                     case "2": {
-                        input1="2";
+                        input1 = "2";
                         senderTCP.println("2");
                         System.out.print("Utilizador?");
-                        input2=getInput();
+                        input2 = getInput();
                         senderTCP.println(input2);
                         System.out.print("Menssagem?");
-                        input3=getInput();
+                        input3 = getInput();
                         senderTCP.println(input3);
                         System.out.println(reciverTCP.readLine());
                         break;
                     }
                     case "3": {
-                        input1="3";
+                        input1 = "3";
                         senderTCP.println("3");
                         System.out.print("Menssagem?");
-                        input2=getInput();
+                        input2 = getInput();
                         senderTCP.println(input2);
                         System.out.println(reciverTCP.readLine());
                         break;
@@ -211,6 +214,7 @@ public class Cliente1 {
 
             System.exit(0);
         } catch (ConnectException e) {
+
             System.out.println("Unable to Conect to Server try again later...");
             System.exit(0);
         }

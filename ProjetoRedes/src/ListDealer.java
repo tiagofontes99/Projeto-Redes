@@ -18,6 +18,14 @@ public class ListDealer extends Main {
         writeTo("listaNegra");
     }
 
+    public void ipDealer(String ip) throws IOException {
+        if (listaBranca.contains(ip)&&listaNegra.contains(ip)){
+            listaBranca.remove(ip);
+        }else if (!listaBranca.contains(ip)&&!listaNegra.contains(ip)){
+            listaBranca.add(ip);
+        }
+    }
+
     public void addOnlineUser(String ip) {
         onlineUsers.add(ip);
     }
@@ -79,25 +87,16 @@ public class ListDealer extends Main {
     }
 
     public void writeTo(String list) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("/ProjetoRedes/src/" + list + ".txt"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("ProjetoRedes/src/" + list + ".txt"));
         if ("listaBranca".equals(list)) {
-            listaBranca
-                    .forEach(y -> {
-                        try {
-                            writer.write(y);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
+            for (String adress:listaBranca){
+                writer.write(adress);
+            }
+
         } else {
-            listaNegra
-                    .forEach(y -> {
-                        try {
-                            writer.write(y);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
+            for (String adress:listaNegra){
+                writer.write(adress);
+            }
         }
         writer.close();
     }

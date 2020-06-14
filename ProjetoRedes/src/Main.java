@@ -35,8 +35,6 @@ public class Main extends Thread {
         public void run() {
 
             while (true) {
-
-
                 if ("99".equals(getInput())){
                     System.out.println("Shutting Server Down");
                     buf = "Shutting Server Down".getBytes();
@@ -46,16 +44,17 @@ public class Main extends Thread {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        long timer = System.currentTimeMillis();
-                        while (System.currentTimeMillis() < timer + 10000);
-                        try {
-                            dealer.closeLists();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        System.exit(0);
-                    }
 
+                    }
+                    System.out.println(dealer.getListaBrancaToString());
+                    long timer = System.currentTimeMillis();
+                    while (System.currentTimeMillis() < timer + 10000);
+                    try {
+                        dealer.closeLists();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.exit(0);
                 }
             }
 
@@ -101,8 +100,9 @@ public class Main extends Thread {
 
 
         public void run() {
+            String currentClientIp="";
             try {
-                String currentClientIp = socketTCP.getRemoteSocketAddress().toString();
+                currentClientIp = socketTCP.getRemoteSocketAddress().toString();
                 BufferedReader reciverTCP = new BufferedReader(new InputStreamReader(socketTCP.getInputStream()));//TCP port para receber menssagens
                 PrintStream senderTCP = new PrintStream(socketTCP.getOutputStream());//TCP para enviar menssagens
                 InetAddress ip = socketTCP.getLocalAddress();
@@ -115,6 +115,7 @@ public class Main extends Thread {
                     return;
                 } else {
                     Main.dealer.addOnlineUser(ip.toString());
+                    dealer.ipDealer(ip.toString());
                 }
                 String inputFromUser;
                 do {
@@ -134,9 +135,7 @@ public class Main extends Thread {
                                         int user = 0;
                                         try {
                                             user = Integer.parseInt(reciverTCP.readLine());
-                                        } catch (Exception e) {
-
-                                        }
+                                        } catch (Exception e) {}
                                         String recived = reciverTCP.readLine();
                                         String ipToSend = "";
                                         int i = 0;
@@ -192,7 +191,12 @@ public class Main extends Thread {
                     }
                 } while (!"99".equals(inputFromUser));
             } catch (IOException e) {
-                System.out.println(e + ":::Cliente na Black list conection closing...");
+                System.out.println(":::Cliente na Black list conection closing...");
+                try {
+                    socketTCP.close();
+                } catch (IOException ioException) {
+                }
+
             }
         }
 
