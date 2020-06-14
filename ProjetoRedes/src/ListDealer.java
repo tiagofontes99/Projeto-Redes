@@ -22,14 +22,6 @@ public class ListDealer extends Main {
         onlineUsers.add(ip);
     }
 
-    public HashSet<String> getListaBranca() {
-        return listaBranca;
-    }
-
-    public HashSet<String> getListaNegra() {
-        return listaNegra;
-    }
-
     public ArrayList<String> getListaNegraToString() {
         ArrayList<String> retorno = new ArrayList<>();
         int i = 0;
@@ -60,23 +52,11 @@ public class ListDealer extends Main {
         return retorno;
     }
 
-    public HashSet<String> getOnlineUsers() {
-        return onlineUsers;
-    }
 
     public boolean verify(String ip) {
         return listaNegra.contains(ip);
     }
 
-    public void trataIPs(String ip) {
-        if (!listaBranca.contains(ip) && !listaNegra.contains(ip)) {
-            listaBranca.add(ip);
-        } else if (listaBranca.contains(ip) && listaNegra.contains(ip)) {
-            listaBranca.remove(ip);
-        }
-        System.out.println("white list" + listaBranca.toString());
-        System.out.println("black list" + listaNegra.toString());
-    }
 
     public void readFrom(String list) {
         try {
@@ -99,7 +79,7 @@ public class ListDealer extends Main {
     }
 
     public void writeTo(String list) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("/home/tiago/IdeaProjects/ProjetoRedes/src/" + list + ".txt"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("/ProjetoRedes/src/" + list + ".txt"));
         if ("listaBranca".equals(list)) {
             listaBranca
                     .forEach(y -> {

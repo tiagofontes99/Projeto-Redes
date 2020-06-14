@@ -48,8 +48,14 @@ public class Main extends Thread {
                         }
                         long timer = System.currentTimeMillis();
                         while (System.currentTimeMillis() < timer + 10000);
+                        try {
+                            dealer.closeLists();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         System.exit(0);
                     }
+
                 }
             }
 
