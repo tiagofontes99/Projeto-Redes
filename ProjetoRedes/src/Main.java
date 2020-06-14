@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 /*
 COMUNICAÇÕES DE CLIENTE PARA SERVIDOR É TCP
@@ -21,8 +22,41 @@ public class Main extends Thread {
             e.printStackTrace();
         }
     }
+    public static String getInput() {
+        Scanner in = new Scanner(System.in);
+        return in.nextLine();
+    }
 
-    ;
+    static class ServerShutdown implements Runnable {
+        ServerShutdown() {
+            System.out.println("A ler a command line");
+        }
+
+        public void run() {
+
+            while (true) {
+
+
+                if ("99".equals(getInput())){
+                    System.out.println("Shutting Server Down");
+                    buf = "Shutting Server Down".getBytes();
+                    for (String adress : dealer.getListaOnlineUsers()) {
+                        try {
+                            RunnableDemo.sendEcho("menssagem de [Servidor] to everyone  : ServerShutting Down in 10 seconds" , adress);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        long timer = System.currentTimeMillis();
+                        while (System.currentTimeMillis() < timer + 10000);
+                        System.exit(0);
+                    }
+                }
+            }
+
+
+        }
+
+    }
 
     static class RunnableDemo implements Runnable {
 
@@ -158,22 +192,12 @@ public class Main extends Thread {
 
     }
 
-    public static String sendEcho(String msg, DatagramSocket socketUDP, Socket socketTCP) throws IOException {
-        socketUDP.getRemoteSocketAddress();
-        buf = msg.getBytes();
-        DatagramPacket packet
-                = new DatagramPacket(buf, buf.length, socketTCP.getInetAddress(), 9031);
-        socketUDP.send(packet);
-        byte[] buf2 = new byte[1024];
-        packet = new DatagramPacket(buf2, buf2.length);
-        socketUDP.receive(packet);
-        String received = new String(
-                packet.getData(), 0, packet.getLength());
-        return received;
-    }
+
 
 
     public static void main(String args[]) throws IOException {
+        Thread serverPowerButton = new Thread(new ServerShutdown());
+        serverPowerButton.start();
         while (true) {
             Socket socketTCP = null;
             socketTCP = serverTCP.accept();

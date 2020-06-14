@@ -13,21 +13,13 @@ public class Cliente2 {
 
     static Socket socketTCP;//Porto TCP
 
-    static {
-        try {
-            socketTCP = new Socket("localhost", 6500);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     static PrintStream senderTCP;//iniciar comunicaçoes tcp
 
     static {
         try {
             senderTCP = new PrintStream(socketTCP.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+
         }
     }
 
@@ -36,13 +28,13 @@ public class Cliente2 {
     static {
         try {
             reciverTCP = new BufferedReader(new InputStreamReader(socketTCP.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+
         }
     }
 
 
-    static byte[] buffer=new byte[225];//Vai necessitar uma String .getBytes
+    static byte[] buffer = new byte[225];//Vai necessitar uma String .getBytes
     static InetAddress address;
 
     static {
@@ -65,6 +57,7 @@ public class Cliente2 {
     }
 
     static DatagramSocket socketUDP;
+
     static {
         try {
             socketUDP = new DatagramSocket(9032);
@@ -79,19 +72,32 @@ public class Cliente2 {
         return in.nextLine();
     }
 
-    static class ConstantReciver implements Runnable{
-        ConstantReciver( ){
+    static class ConstantReciver implements Runnable {
+        ConstantReciver() {
             System.out.println("Starting message reciver");
         }
 
         public void run() {
-            while (true){
+
+
+            while (true) {
                 try {
-                    System.out.println(reciveEcho());
+
+                    String recived = reciveEcho();
+                    System.out.println(recived);
+                    if ("YOU ARE IN THE BLACKLIST\n Conection closing...\n".equals(recived.trim())) {
+                        socketTCP.close();
+                        socketUDP.close();
+                        System.out.println(recived);
+                    }
                 } catch (IOException e) {
                     System.out.println(e);
                 }
+
+
             }
+
+
         }
 
     }
@@ -101,7 +107,9 @@ public class Cliente2 {
         DatagramPacket receivePacket = new DatagramPacket(buffer,
                 buffer.length);
         socketUDP.receive(receivePacket);
-        return new String(receivePacket.getData(), 0, receivePacket.getLength());
+        String recived = new String(receivePacket.getData(), 0, receivePacket.getLength());
+
+        return recived;
 
     }
 
@@ -114,24 +122,24 @@ public class Cliente2 {
                 "3-Enviar mensagem a todos os utilizadores\n" +
                 "4-lista branca de utilizadores\n" +
                 "5-lista negra de utilizadores\n" +
-                "99-Sair\n\n" +
-                "Opção? ";
+                "99-Sair\n\n";
     }
 
     public static void main(String args[]) throws Exception {
 
-        Thread reciver=new Thread(new ConstantReciver());
+        Thread reciver = new Thread(new ConstantReciver());
         reciver.start();
-        try{
+
+        try {
             Socket socketTCP = new Socket("localhost", 6500);//Porto TCP
             PrintStream senderTCP = new PrintStream(socketTCP.getOutputStream());//iniciar comunicaçoes tcp
             BufferedReader reciverTCP = new BufferedReader(new InputStreamReader(socketTCP.getInputStream()));//iniciar recebimento de comunicaçoes tcp
 
-            long timer = System.currentTimeMillis();
 
             System.out.print(getMenu());//
             String input;
             do {
+                System.out.println("Opção? ");
                 input = getInput();
                 switch (input) {
                     case "0": {
@@ -150,15 +158,13 @@ public class Cliente2 {
                         System.out.print("Menssagem?");
                         senderTCP.println(getInput());
                         System.out.println(reciverTCP.readLine());
-
-
                         break;
                     }
                     case "3": {
                         senderTCP.println("3");
                         System.out.print("Menssagem?");
                         senderTCP.println(getInput());
-                        System.out.println(reciveEcho());
+                        System.out.println(reciverTCP.readLine());
                         break;
 
                     }
@@ -179,17 +185,24 @@ public class Cliente2 {
                         break;
                     }
                 }
-                System.out.println("Opção? ");
+                try {
+                    socketTCP = new Socket("localhost", 6500);//Porto TCP
+                } catch (ConnectException a) {
+                    System.out.println("We found a problem in the conection, trying again...");
+                    long timer = System.currentTimeMillis();
+                    while (System.currentTimeMillis() < timer + 10000) ;
+                    socketTCP = new Socket("localhost", 6500);//Porto TCP
+                    senderTCP = new PrintStream(socketTCP.getOutputStream());//iniciar comunicaçoes tcp
+                    reciverTCP = new BufferedReader(new InputStreamReader(socketTCP.getInputStream()));//iniciar recebimento de comunicaçoes tcp
+
+                }
+
             } while (!"99".equals(input));
 
-            System.out.println("socket=" + socketTCP);
-
+            System.exit(0);
         } catch (ConnectException e) {
-            long timer = System.currentTimeMillis();
-            while (System.currentTimeMillis() < timer + 15000) {//timer caso falhe ligação
-
-            }
-            System.out.println("Server Down try again later\nConection shutting down");
+            System.out.println("Unable to Conect to Server try again later...");
+            System.exit(0);
         }
 
     }

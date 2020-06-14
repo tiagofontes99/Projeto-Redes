@@ -202,6 +202,7 @@ public class Cliente1 {
             System.exit(0);
         } catch (ConnectException e) {
             System.out.println("Unable to Conect to Server try again later...");
+            System.exit(0);
         }
 
     }
